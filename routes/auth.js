@@ -22,3 +22,4 @@ router.put('/user/:id', authController.updateUser);
 router.delete('/user/:id', authController.deleteUser);
 
 module.exports = router;
+

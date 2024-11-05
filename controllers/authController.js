@@ -1,26 +1,34 @@
 const bcrypt = require('bcrypt');
 const ModelUser = require('../models/User');
 
-// Registro de nuevo usuario
 exports.register = async (req, res) => {
+    const { username, password } = req.body;
+
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const user = new ModelUser({ username: req.body.username, password: hashedPassword });
+        // Crear el usuario sin cifrar la contraseña (solo para pruebas)
+        const user = new ModelUser({
+            username,
+            password  // Almacenar la contraseña en texto claro
+        });
+
+        // Guardar el usuario en la base de datos
         await user.save();
+
         res.status(201).json({ message: 'Usuario registrado exitosamente' });
     } catch (error) {
         res.status(400).json({ message: 'Error al registrar usuario', error: error.message });
     }
 };
 
-// Inicio de sesión
 exports.login = async (req, res) => {
     try {
         const user = await ModelUser.findOne({ username: req.body.username });
         if (!user) return res.status(400).json({ message: 'Usuario no encontrado' });
 
-        const isMatch = await bcrypt.compare(req.body.password, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Contraseña incorrecta' });
+        // Comparar directamente las contraseñas en texto claro (solo para pruebas)
+        if (req.body.password !== user.password) {
+            return res.status(401).json({ message: 'Contraseña incorrecta' });
+        }
 
         res.json({ message: 'Autenticación satisfactoria' });
     } catch (error) {
