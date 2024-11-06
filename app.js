@@ -6,18 +6,25 @@ const categoryRoutes = require('./routes/category');
 const productRoutes = require('./routes/product');
 const supplierRoutes = require('./routes/supplier');
 const saleRoutes = require('./routes/sale');
+const cors = require("cors");
 
+const app = express(); // Mueve esta línea hacia arriba
 
-const app = express();
+const corsOptions= {
+    origin: "*",
+}
+
+// Usa el middleware de CORS
+app.use(cors(corsOptions));
 
 // Conectar a la base de datos
 dbconnect();
 
-// Middleware
+// Middleware para analizar JSON
 app.use(express.json());
 
 // Rutas
-app.use('/api/auth', authRoutes);// ruta de usuarios
+app.use('/api/auth', authRoutes); // Ruta de usuarios
 app.use('/api', clientRoutes); // Rutas de clientes
 app.use('/api', categoryRoutes); // Rutas de categorías
 app.use('/api', productRoutes); // Rutas de productos
