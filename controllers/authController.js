@@ -62,11 +62,10 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
-        
+
         const updatedUser = await ModelUser.findByIdAndUpdate(
             req.params.id,
-            { username, password: hashedPassword },
+            { username, password },
             { new: true }
         );
 
@@ -76,6 +75,7 @@ exports.updateUser = async (req, res) => {
         res.status(500).json({ message: 'Error al actualizar usuario', error: error.message });
     }
 };
+
 
 // Eliminar usuario
 exports.deleteUser = async (req, res) => {
